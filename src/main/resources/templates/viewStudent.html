@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Student</title>
+</head>
+<body>
+<h1>Student Details</h1>
+<p>First Name: <span th:text="${student.firstName}"></span></p>
+<p>Last Name: <span th:text="${student.lastName}"></span></p>
+<p>Age: <span th:text="${student.age}"></span></p>
+<p>University ID: <span th:text="${student.universityId}"></span></p>
+<br>
+<a href="/students">Back to Home</a>
+</body>
+</html>
