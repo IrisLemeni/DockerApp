@@ -1,0 +1,36 @@
+- name: Deploy Java App on EC2
+  hosts: ec2
+  become: true
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+
+    - name: Install dependencies
+      apt:
+        name: ['docker.io', 'docker-compose']
+        state: present
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Create app directory
+      file:
+        path: /home/{{ ansible_user }}/app
+        state: directory
+
+    - name: Copy app files
+      copy:
+        src: ../
+        dest: /home/{{ ansible_user }}/app
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Run Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: /home/{{ ansible_user }}/app
