@@ -1,36 +1,55 @@
-- name: Deploy Java App on EC2
-  hosts: ec2
+---
+- hosts: all
   become: true
   tasks:
+
     - name: Update apt
       apt:
         update_cache: yes
 
     - name: Install dependencies
       apt:
-        name: ['docker.io', 'docker-compose']
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
         state: present
 
-    - name: Add user to docker group
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: yes
+    - name: Add Docker GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-    - name: Create app directory
-      file:
-        path: /home/{{ ansible_user }}/app
-        state: directory
+    - name: Add Docker repository
+      shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 
-    - name: Copy app files
-      copy:
-        src: ../
-        dest: /home/{{ ansible_user }}/app
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+    - name: Update apt again
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: latest
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-    - name: Run Docker Compose
-      command: docker compose up -d
+    - name: Clone app repo
+      git:
+        repo: https://github.com/username/repo.git
+        dest: /home/ubuntu/app
+        force: yes
+
+    - name: Run docker compose
+      shell: docker-compose up -d
       args:
-        chdir: /home/{{ ansible_user }}/app
+        chdir: /home/ubuntu/app
