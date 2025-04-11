@@ -45,7 +45,7 @@
 
     - name: Clone app repo
       git:
-        repo: https://github.com/username/repo.git
+        repo: https://github.com/IrisLemeni/DockerApp.git
         dest: /home/ubuntu/app
         force: yes
 
