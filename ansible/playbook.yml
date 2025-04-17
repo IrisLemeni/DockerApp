@@ -26,6 +26,11 @@
       apt:
         update_cache: yes
 
+    - name: Install git
+      apt:
+        name: git
+        state: present
+
     - name: Install Docker
       apt:
         name: docker-ce
@@ -49,17 +54,7 @@
         dest: /home/ubuntu/app
         force: yes
 
-    - name: Show git clone result
-      debug:
-        var: git_clone_result
-
     - name: Run docker compose
       shell: docker-compose up -d
       args:
         chdir: /home/ubuntu/app
-
-    - name: Add ubuntu user to docker group
-      user:
-        name: ubuntu
-        groups: docker
-        append: yes
