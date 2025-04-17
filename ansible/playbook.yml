@@ -49,6 +49,10 @@
         dest: /home/ubuntu/app
         force: yes
 
+    - name: Show git clone result
+      debug:
+        var: git_clone_result
+
     - name: Run docker compose
       shell: docker-compose up -d
       args:
