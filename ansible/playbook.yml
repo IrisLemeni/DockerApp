@@ -53,3 +53,9 @@
       shell: docker-compose up -d
       args:
         chdir: /home/ubuntu/app
+
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
