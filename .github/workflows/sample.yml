@@ -1,5 +1,5 @@
 name: Build and Push Docker Image
-#ceva si ceva 2 3
+#ceva si ceva 2 3 4
 on:
   push:
     branches:
